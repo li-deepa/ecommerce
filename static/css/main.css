@@ -20,6 +20,23 @@ body{
     font-size: 14px;
 }
 
+#wishlist{
+     
+	width: 25px;
+	display: inline-block;
+	margin-left: 15px;
+}
+
+#wishlist-total{
+   display: block;
+   text-align: center;
+   color: #000;
+   background-color:rgb(147, 222, 135);
+   width: 20px;
+   height: 20px;
+   border-radius: 50% ;
+   font-size: 14px;
+}
 
 #store-image{
     height:360px;

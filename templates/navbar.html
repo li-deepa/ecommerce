@@ -17,12 +17,17 @@
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form> -->
       <div class="form-inline my-2 my-lg-0">
+        <a href="{% url 'wishlist' %}" >
+          <img src="{% static 'images/wishlist.png' %}" class="cart">
+          
+        </a><p id="wishlist-total" class="mr-sm-2" >{{product.get_wishlist_items}}</p>
+         
         <a href="" class="btn btn-success mr-sm-2" >Login</a>
         <a href="{% url 'cart' %}">
             <img src="{% static 'images/cart.png' %}" class="cart">
            
-        </a><p id="cart-total">0</p>
+        </a><p id="cart-total">{{order.get_cart_items}}</p>
       </div>
     </div>
   </nav>
-  <hr>
+  

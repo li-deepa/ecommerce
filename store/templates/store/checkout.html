@@ -54,17 +54,21 @@
         <a href="{% url 'cart'%}" class=" btn btn-outline-info mr-sm-2">Back to cart</a>
 <hr>
 <h5>Order Summary:</h5>
+
 <hr>
+{%for item in items %}
         <div class="cart-row">
-            <div style="flex:2 ;"><img class="row-image" src=" {% static 'images/placeholder_640x360.png' %}"></div>
-            <div style="flex:2 ;">product 1</div>
-            <div style="flex:1 ;">$20</div>
-            <div style="flex:1 ;">x2</div>
+            <div style="flex:2 ;"><img class="row-image" src="{{item.product.imageURL}}"></div>
+            <div style="flex:2 ;">{{item.product.name}}</div>
+            <div style="flex:1 ;">x{{item.quantity}}</div>
+            <div style="flex:1 ;">{{item.product.price|floatformat:2}}</div>
+        </div>
+        {% endfor %}
             
-        </div>
-        <h5>Items: 2</h5>
-        <h5>Total: $4</h5>
-        </div>
+                <h5 style="text-align: left;" >No of Items: {{order.get_cart_items}}</h5>
+                <h5 style="text-align: right;">Total:${{order.get_cart_total|floatformat:2}}</h5>
+           
+    </div>
   </div>
 </div>
 
