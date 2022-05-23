@@ -3,21 +3,26 @@
 {% block content %}
 
 <div class="row">
-    {% for product in products %}
+   
+   
+    <!-- {% if products in wishItems %} -->
+    {%for item in product%}
     <div class="col-lg-4">
-        <img class="thumbnail" src=" {{product.imageURL}}" >
+        <img class="thumbnail" src=" {{item.imageURL}}" >
        
         <div class="box-element product" style="text-align: center;">
             <h5><strong>{{product.name}}</strong> </h5>
            
             <h5 ><strong>${{product.price|floatformat:2}}</strong></h5>
             <a href="#" class=" btn btn-success mr-sm-2">view</a>
-            <button href="#" class=" btn btn-success mr-sm-2">Add to cart</button>
+            <button data-product="{{product.id}}" data-action="add" class=" btn btn-success mr-sm-2 update-cart">Add to cart</button>
             
             
         </div>
       </div>
-     {% endfor %}
+      {% endfor %}
+      <!-- {% endif %} -->
+      
       </div>
      
 {% endblock %}

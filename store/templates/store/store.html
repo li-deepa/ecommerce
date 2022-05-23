@@ -7,19 +7,34 @@
     <div class="col-lg-4">
         <img class="thumbnail" src=" {{product.imageURL}}" >
        
-        <div class="box-element product" style="text-align: center;">
+        <div class="box-element product" style="text-align: center;" >
             <h5><strong>{{product.name}}</strong> </h5>
            
             <h5 ><strong>${{product.price|floatformat:2}}</strong></h5>
+            <img src="{% static 'images/wishlist.png' %}" class="wishlist" onclick="myFunction1()" id="wish"/>   
+            
+            <!-- <p>Click on the heart to love or un-love this post.</p> -->
+             
+
             <a href="#" class=" btn btn-success mr-sm-2">view</a>
-             <button href="{% url 'wishlist' %}" class=" btn btn-outline-success mr-sm-2">wishlist</button>
-            <button href="{% url 'cart' %}" class=" btn btn-success mr-sm-2">Add to cart</button>
+            
+             <button data-product="{{product.id}}" data-action="add" class=" btn btn-success mr-sm-2 update-cart">Add to cart</button>
             
             
         </div>
       </div>
+      <script type="text/javascript">
+        function myFunction1() { 
+            document.getElementById('wish').style.backgroundColor=  "green";
+        };
+    </script>
      {% endfor %}
+
       </div>
+      
+     
+    
+   
      
 {% endblock %}
 

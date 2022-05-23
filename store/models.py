@@ -28,11 +28,7 @@ class Product(models.Model):
             url=''
         return url
 
-    @property
-    def get_wishlist_items(self):
-        wishitems=self.product_set.all()
-        total=sum([item.quantity for item in wishitems])
-        return total
+   
 
 class Order(models.Model):
     customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True,blank=True)
@@ -54,6 +50,8 @@ class Order(models.Model):
         orderitems=self.orderitem_set.all()
         total=sum([item.quantity for item in orderitems])
         return total
+    
+    
 
 class OrderItem(models.Model):
     product=models.ForeignKey(Product,on_delete=models.SET_NULL,null=True,blank=True)
@@ -65,6 +63,9 @@ class OrderItem(models.Model):
     def get_total(self):
         total=self.product.price*self.quantity
         return total
+    
+    
+    
 
 class ShippingAddress(models.Model):
     customer=models.ForeignKey(Customer,on_delete=models.SET_NULL,null=True,blank=True)
@@ -77,3 +78,8 @@ class ShippingAddress(models.Model):
 
     def __str__(self):
         return self.address
+
+# class Wishlist(models.Model):
+#     user = models.ForeignKey(Customer,on_delete=models.CASCADE)# here CASCADE is the behavior to adopt when the referenced object(because it is a foreign key) is deleted. it is not specific to django,this is an sql standard.
+#     products = models.ForeignKey(Product,on_delete=models.CASCADE)
+    
