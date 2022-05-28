@@ -1,4 +1,4 @@
-from itertools import product
+import datetime
 from django.shortcuts import get_object_or_404, render
 from .models import *
 from django.http import JsonResponse,HttpResponse
@@ -13,29 +13,28 @@ def store(request):
 
     else:
         items=[]
-        order={'get_cart_total':0,'get_cart_items':0}
+        order={'get_cart_total':0,'get_cart_items':0,'shipping':False}
         cartItems=order['get_cart_items']
         
     products=Product.objects.all()
     context={'products':products,'cartItems':cartItems}
     return render(request,'store/store.html',context)
 
-# def wishlist(request):
-#     if request.user.is_authenticated:
-#         customer=request.user.customer
-#         order, created = Order.objects.get_or_create(customer=customer,complete=False)
-#         items=order.orderitem_set.all()
-#         cartItems=order.get_cart_items
-#         wishItems=order.get_wishlist_items
-#     else:
-#         items=[]
-#         order={'get_cart_total':0,'get_cart_items':0}
-#         cartItems=order['get_cart_items']
-        
-#     product=Product.objects.get(id=order.id)
-#     print(product)
-#     context={'product':product,'wishItems':wishItems,'cartItems':cartItems}
-#     return render(request, 'store/wishlist.html', context)
+def wishlist(request):
+    if request.user.is_authenticated:
+        customer=request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer,complete=False)
+        items=order.orderitem_set.all()
+        cartItems=order.get_cart_items
+        products=Product.objects.all()
+        wishitems=order.get_cart_items
+    else:
+        items=[]
+        order={'get_cart_total':0,'get_cart_items':0,'shipping':False}
+        cartItems=order['get_cart_items']
+    # print(wishitems)
+    context={'items':items,'order': order,'cartItems':cartItems,'wishitems':wishitems,'products':products}
+    return render(request,'store/wishlist.html',context)
 
 
 def cart(request):
@@ -47,7 +46,7 @@ def cart(request):
 
     else:
         items=[]
-        order={'get_cart_total':0,'get_cart_items':0}
+        order={'get_cart_total':0,'get_cart_items':0,'shipping':False}
         cartItems=order['get_cart_items']
         
     context={'items':items,'order': order,'cartItems':cartItems}
@@ -63,7 +62,7 @@ def checkout(request):
 
     else:
         items=[]
-        order={'get_cart_total':0,'get_cart_items':0}
+        order={'get_cart_total':0,'get_cart_items':0,'shipping':False}
         cartItems=order['get_cart_items']
         
     context={'items':items,'order': order,'cartItems':cartItems}
@@ -73,8 +72,8 @@ def updateItem(request):
     data=json.loads(request.body)
     productId=data['productId']
     action=data['action']
-    print('action:',action)
-    print('product:',productId)
+    # print('action:',action)
+    # print('product:',productId)
 
     customer=request.user.customer
     product=Product.objects.get(id=productId)
@@ -92,3 +91,30 @@ def updateItem(request):
         orderItem.delete()
 
     return JsonResponse("item was added",safe=False)
+
+
+def processOrder(request):
+    transaction_id=datetime.datetime.now().timestamp()
+    data=json.loads(request.body)
+    if request.user.is_authenticated:
+        customer=request.user.customer
+        order, created = Order.objects.update_or_create(customer=customer,complete=False)
+        total=float(data['form']['total'])
+        order.transaction_id=transaction_id
+
+        if total==order.get_cart_total:
+            order.complete=True
+        order.save()
+
+        if order.shipping==True:
+            ShippingAddress.objects.create(
+                customer=customer,
+                order=order,
+                address=data['shipping']['address'],
+                city=data['shipping']['state'],
+                state=data['shipping']['city'],
+                zipcode=data['shipping']['zipcode'],
+            )
+    else:
+        print("user not logged in")
+    return JsonResponse("Payment complete!",safe=False)
