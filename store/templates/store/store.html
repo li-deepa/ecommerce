@@ -11,7 +11,7 @@
             <h5><strong>{{product.name}}</strong> </h5>
            
             <h5 ><strong>${{product.price|floatformat:2}}</strong></h5>
-            <button data-product="{{product.id}}" data-action="add" class=" btn-outline-warning " id="update-wish"> wishlist  </button>
+            <button data-product="{{product.id}}" data-action="add" class=" btn-outline-warning update-wish" > wishlist  </button>
             
             
 
@@ -24,19 +24,13 @@
       </div>
       
      {% endfor %}
-     <script type="text/javascript">
+     <!-- <script type="text/javascript">
         document.getElementById('update-wish').addEventListener('click',function(e){
     wishData()
 })
  function wishData(){
-     console.log("wishbutton button clicked..")
-    //  var userFormData={
-    //      'name':null,
-    //      'email':null,
-    //      'total':total,
-      
-    //  }}
- }
+     console.log("wishbutton button clicked..") -->
+  
     </script>
       </div>
       

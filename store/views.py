@@ -1,4 +1,5 @@
 import datetime
+from itertools import product
 from django.shortcuts import get_object_or_404, render
 from .models import *
 from django.http import JsonResponse,HttpResponse
@@ -26,14 +27,12 @@ def wishlist(request):
         order, created = Order.objects.get_or_create(customer=customer,complete=False)
         items=order.orderitem_set.all()
         cartItems=order.get_cart_items
-        products=Product.objects.all()
-        wishitems=order.get_cart_items
     else:
         items=[]
         order={'get_cart_total':0,'get_cart_items':0,'shipping':False}
         cartItems=order['get_cart_items']
-    # print(wishitems)
-    context={'items':items,'order': order,'cartItems':cartItems,'wishitems':wishitems,'products':products}
+    
+    context={'items':items,'order': order,'cartItems':cartItems,}
     return render(request,'store/wishlist.html',context)
 
 
@@ -45,10 +44,42 @@ def cart(request):
         cartItems=order.get_cart_items
 
     else:
+        try:    
+            cart = json.loads(request.COOKIES['cart'])
+        except:
+            cart={}
+        print('cart:',cart)
         items=[]
         order={'get_cart_total':0,'get_cart_items':0,'shipping':False}
         cartItems=order['get_cart_items']
         
+        for i in cart:
+            try:
+                cartItems += cart[i]["quantity"]
+
+                product=Product.objects.get(id=i)
+                total=(product.price * cart[i]['quantity'])
+
+                order['get_cart_total'] += total
+                order['get_cart_items'] += cart[i]['quantity']
+
+                item = {
+                    'product': {
+                        'id': product.id,
+                        'name': product.name,
+                        'price': product.price,
+                        'imageURL': product.imageURL
+                    },
+                    'quantity': cart[i]['quantity'],
+                    'get_total': total,
+                }
+                items.append(item)
+
+                if product.digital == False:
+                    order['shipping']=True
+                    
+            except:
+                pass
     context={'items':items,'order': order,'cartItems':cartItems}
     return render(request,'store/cart.html',context)
 
@@ -118,3 +149,22 @@ def processOrder(request):
     else:
         print("user not logged in")
     return JsonResponse("Payment complete!",safe=False)
+
+def updateWish(request):
+    data=json.loads(request.body)
+    productId=data['productId']
+    action=data['action']
+    # print('action:',action)
+    # print('product:',productId)
+
+    customer=request.user
+    product=Product.objects.get(id=productId)
+    order, created = Order.objects.update_or_create(customer=customer,complete=False)
+    orderItem, created = OrderItem.objects.update_or_create(order=order,product=product)
+   
+
+    orderItem.save()
+
+    
+
+    return JsonResponse("item was added",safe=False)

@@ -9,5 +9,6 @@ urlpatterns = [
     path('wishlist/',views.wishlist,name='wishlist'),
     path('update_item/',views.updateItem,name='update_item'),
     path('process_order/',views.processOrder,name='process_order'),
+    path('update_wish/',views.updateWish,name='update_wish'),
 
 ]
