@@ -1,7 +1,7 @@
 var updateBtns = document.getElementsByClassName('update-wish')
-
+console.log("wishbutton button clicked..")
 for (i = 0; i < updateBtns.length; i++) {
-    console.log("wishbutton button clicked..")
+    
     updateBtns[i].addEventListener('click', function () {
         var productId = this.dataset.product
         var action = this.dataset.action
@@ -21,7 +21,7 @@ for (i = 0; i < updateBtns.length; i++) {
 }
 function updateProduct(productId, action) {
     console.log('User is logged in,sending data ..')
-    var url = '/update_wish/'
+    var url = '/update_item/'
 
     fetch(url, {
         method: 'POST',
