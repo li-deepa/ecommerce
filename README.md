@@ -53,8 +53,4 @@ This repository contains the code for an E-commerce platform designed to provide
   </li>
 </ol>
 
-<h2>Contributing</h2>
-<p>Contributions are welcome! Please fork the repository and submit a pull request for any improvements or additional features.</p>
 
-<h2>License</h2>
-<p>This project is open-source and available under the <a href="LICENSE">MIT License</a>.</p>
